@@ -31,6 +31,190 @@ This guide covers the **lever arm compression** method for measuring Mini 4WD mo
 
 ---
 
+## How It Works - The Physics Explained
+
+### Understanding Rotational Force → Linear Force Conversion
+
+**Key Concept:** The motor doesn't directly push down. Instead, the motor **tries to rotate** the lever arm, but the load cell **resists** that rotation, creating a measurable force.
+
+### Top View - Shows Rotation
+
+```
+Looking Down at Motor Shaft (Top View):
+
+    STEP 1: Motor Off
+    ==================
+
+           Lever arm (at rest)
+       ================●  Motor shaft
+
+           [Load Cell]
+           (below, not touching)
+
+
+    STEP 2: Motor Energized (tries to rotate clockwise)
+    ====================================================
+
+           Lever rotates →  ●  ← Shaft spins CW
+                         ╱
+                       ╱  Lever arm swings
+                     ╱
+                   ╱
+         [Load Cell] ← Lever end contacts and PUSHES DOWN
+         (blocks rotation)
+
+
+    STEP 3: Motor Stalled (maximum torque)
+    ========================================
+
+              Can't rotate further!
+                ╱──●  ← Shaft trying HARD to spin
+               ╱
+              ╱  Lever arm STUCK
+             ╱
+            ↓ MAXIMUM FORCE pushing down
+         [Load Cell]
+         (preventing any rotation)
+         Measures MAXIMUM force = Stall torque!
+```
+
+### Side View - Shows Force Direction
+
+```
+Cross Section View (From Side):
+
+    NO LOAD (Free Running):
+    =======================
+
+    ┌─────────┐
+    │  Motor  │
+    └────┬────┘
+         │ Shaft
+    ─────●───── Lever arm (horizontal)
+                ↓ (barely touching)
+         [Load Cell]
+         Reading: ~0g (motor just spinning freely)
+
+
+    WITH LOAD (Measuring Torque):
+    ==============================
+
+    ┌─────────┐
+    │  Motor  │ ← Working harder
+    └────┬────┘
+         │ Shaft rotating
+      ╱──●───── Lever arm tilting as it rotates
+     ╱          ↓↓ Pushing DOWN with force
+    ╱
+         [Load Cell]
+         Reading: 100g (actual torque force!)
+
+
+    STALL TORQUE (Maximum):
+    =======================
+
+    ┌─────────┐
+    │  Motor  │ ← Working MAXIMUM
+    └────┬────┘
+         │ Shaft can't rotate
+       ╱─●───── Lever arm BLOCKED
+      ╱         ↓↓↓ MAXIMUM downward push
+     ╱
+         [Load Cell]
+         Reading: 250g (stall torque force!)
+```
+
+### The Physics - Step by Step
+
+**How Rotation Becomes Linear Force:**
+
+1. **Motor energized**
+   - Electrical power applied
+   - Motor shaft begins rotating
+
+2. **Lever arm rotates with shaft**
+   - Lever is rigidly attached to shaft
+   - Moves in circular arc
+
+3. **Lever contacts load cell**
+   - One end of lever pushes against load cell
+   - Load cell acts as a "brake"
+
+4. **Load cell resists rotation**
+   - Load cell doesn't move (fixed mount)
+   - Creates back-force against lever
+
+5. **Motor must work harder**
+   - Motor generates more torque to overcome resistance
+   - The harder the motor pushes, the more force on load cell
+
+6. **Force measured = Torque calculated**
+   - Force (Newtons) × Lever length (meters) = Torque (N·m)
+
+### Analogy: Opening a Stuck Door
+
+Think of it like opening a door that someone is blocking:
+
+```
+        Door hinge
+            ●  ← Pivot point (like motor shaft)
+            |
+    ========●======== Door (like lever arm)
+                     ↓
+                Your hand pushes HERE (perpendicular)
+                     ↓
+            Someone blocking the door (like load cell)
+```
+
+**What happens:**
+- You push perpendicular to the door
+- Door tries to rotate around hinge
+- Someone blocks the door from other side
+- You push HARDER → More force
+- That force × distance from hinge = Torque
+
+**Same with motor:**
+- Motor = You pushing the door
+- Lever arm = The door
+- Motor shaft = Door hinge
+- Load cell = Person blocking the door
+- Measured force = How hard you're pushing
+
+### Why This Works
+
+**Torque Definition:**
+```
+Torque = Force × Perpendicular Distance
+
+    Motor Shaft (pivot)
+        ●
+        |<------ 60mm ------>|
+    ====●===================== Lever arm
+                            ↓
+                      Force measured here
+                            ↓
+                      [Load Cell]
+
+If load cell reads 100 grams:
+- Force = 100g × 9.81 = 0.981 Newtons
+- Distance = 60mm = 0.06 meters
+- Torque = 0.981 N × 0.06 m = 58.9 mN·m
+```
+
+**The force is PERPENDICULAR to the lever arm**, which is exactly what we need to calculate torque!
+
+### Common Confusion Cleared
+
+❌ **Wrong Understanding:**
+"Motor directly pushes down on load cell"
+
+✅ **Correct Understanding:**
+"Motor tries to ROTATE lever arm, lever arm pushes AGAINST load cell resistance, that resistance force = torque"
+
+**It's not about direct downward force - it's about rotational force being converted to linear force through the lever arm pressing against the load cell!**
+
+---
+
 ## Parts List
 
 ### Mechanical Components

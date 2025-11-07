@@ -90,7 +90,12 @@ GND    → Motor Battery Negative (common ground)
      Note: Motor shaft rotates lever arm, which pushes down on load cell.
      Torque = Force × Lever arm length (measured from shaft center to contact point)
 
-     See MECHANICAL_SETUP_LEVER.md for detailed build instructions.
+     IMPORTANT: The motor doesn't push directly down! The motor TRIES TO ROTATE
+     the lever arm, but the load cell RESISTS that rotation. This resistance
+     creates the measurable force. Think of it like trying to open a door that
+     someone is blocking - the harder you push, the more force is measured.
+
+     See MECHANICAL_SETUP_LEVER.md for detailed physics explanation and build instructions.
 ```
 
 ## Motor Protection Circuit (IMPORTANT!)

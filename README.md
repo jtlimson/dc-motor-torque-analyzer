@@ -66,6 +66,12 @@ ESP32 + OLED Display + Buttons
 - M3 hardware
 - Motor mount
 
+> **💡 How Torque Measurement Works:**
+>
+> The motor tries to **rotate** the lever arm, but the load cell **resists** that rotation. This resistance creates a measurable force. It's like trying to open a door that someone is blocking - the harder you push, the more force is measured. Force × lever length = torque!
+>
+> **Detailed explanation:** `docs/MECHANICAL_SETUP_LEVER.md`
+
 ## Quick Start
 
 ### 1. Hardware Setup (30 min)

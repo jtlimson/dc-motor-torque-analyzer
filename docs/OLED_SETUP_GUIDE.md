@@ -52,6 +52,12 @@ This version displays all measurements directly on a 128x64 OLED screen with but
 - M3 screws and nuts
 - Motor mount (DIY or 3D printed)
 
+> **📖 How the Lever Arm Works:**
+>
+> The motor doesn't push directly down on the load cell. Instead, the motor **tries to rotate** the lever arm, but the load cell **resists** that rotation. This resistance creates a measurable force. Think of it like trying to open a door that someone is blocking - the harder you push, the more force is measured. That force × lever length = torque!
+>
+> **For detailed physics explanation, see:** `docs/MECHANICAL_SETUP_LEVER.md`
+
 ### Tools
 
 - Soldering iron and solder
