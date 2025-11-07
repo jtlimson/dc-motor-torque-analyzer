@@ -20,12 +20,16 @@ This guide will walk you through building a complete torque and power measuremen
 ## Overview
 
 The torque analyzer measures:
-- **Torque** (mN·m) - Using a load cell attached to the motor shaft via a torque arm
+- **Torque** (mN·m and kg·cm) - Using a load cell and lever arm (compression method)
 - **Power** (Watts) - Using an INA219 current/voltage sensor
 - **Current draw** (mA) - Motor current consumption
 - **Voltage** (V) - Battery voltage under load
 
-Data is transmitted wirelessly via Bluetooth to a Raspberry Pi, which serves a web dashboard accessible from your phone.
+**Two versions available:**
+- **OLED Version** (Main) - Standalone with OLED display and buttons
+- **Pi Version** (Archived) - Bluetooth to Raspberry Pi web dashboard
+
+> **Note:** This guide covers both versions. For OLED-specific setup, see `docs/OLED_SETUP_GUIDE.md`
 
 ---
 
@@ -51,14 +55,15 @@ Data is transmitted wirelessly via Bluetooth to a Raspberry Pi, which serves a w
 
 | Item | Quantity | Notes |
 |------|----------|-------|
-| 3D printed test rig | 1 | STL files provided (or build custom) |
+| Lever arm | 1 | Aluminum strip 80mm × 15mm × 2mm (or 3D printed) |
+| Wooden base | 1 | 150mm × 150mm × 10mm for stable mounting |
+| Motor mount | 1 | 3D printed or DIY wood block (holds motor vertically) |
 | M3 screws (10mm) | 4-6 | For mounting |
 | M3 nuts | 4-6 | For mounting |
-| Small pulley or wheel | 1 | 10-20mm diameter, mounts on motor shaft |
-| Fishing line or thin wire | 20cm | Connects pulley to load cell |
-| Wooden base (optional) | 1 | 15cm x 20cm for stable mounting |
+| Shaft coupler (optional) | 1 | 2mm bore, connects lever to shaft |
 | Mini 4WD motor | 1 | Motor to be tested |
 | Mini 4WD battery holder | 1 | 2x AA batteries (2.4V or 3V) |
+| XL4015 Current Limiter | 1 | **CRITICAL** for motor protection |
 
 ---
 
@@ -79,48 +84,115 @@ Data is transmitted wirelessly via Bluetooth to a Raspberry Pi, which serves a w
 ### 1.1 Understanding the Torque Measurement Principle
 
 ```
-Motor Shaft → Pulley (radius R) → String → Load Cell → Fixed Mount
+                Motor (vertical)
+                      |
+                      | shaft
+                      |
+              ========●======== Lever arm (horizontal)
+                      ↓
+                      ↓ Motor tries to rotate lever
+                      ↓ Load cell resists rotation
+                 [Load Cell]  ← Compression mode
+                      |
+                 Fixed Mount
 ```
 
-When the motor runs, it pulls the string, which applies force to the load cell.
-**Torque = Force × Radius**
+**How it works:**
+- Motor tries to **rotate** the lever arm
+- Load cell **resists** that rotation
+- This resistance creates a measurable force
+- **Torque = Force × Lever arm length**
+
+**Think of it like trying to open a door that someone is blocking - the harder you push, the more force is measured!**
+
+> **📖 For detailed physics explanation, see:** `docs/MECHANICAL_SETUP_LEVER.md`
 
 ### 1.2 Build the Test Rig
 
-**Option A: 3D Printed Rig** (Recommended)
-- Print the provided STL file (to be designed separately)
-- Mount motor holder
-- Mount load cell holder
+**Complete detailed build instructions in:** `docs/MECHANICAL_SETUP_LEVER.md`
 
-**Option B: DIY Cardboard/Wood Rig**
+**Quick overview:**
 
-1. **Base plate**: 15cm × 20cm wooden board
+**Option A: 3D Printed Rig** (Best)
+- Design/print motor holder (vertical mount)
+- Print lever arm or use aluminum strip
+- Mount load cell holder below lever arm
+
+**Option B: DIY Wood/Cardboard Rig** (Budget-friendly)
+
+1. **Base plate**: 150mm × 150mm wooden board
+   - Sand edges smooth
+   - Mark motor and load cell positions
+
 2. **Motor mount**:
-   - Cut a motor holder from cardboard/wood
-   - Secure motor vertically with shaft pointing up
-   - Use hot glue or screws
-3. **Load cell mount**:
-   - Mount load cell horizontally, 5-10cm away from motor
-   - One end fixed to base, other end free (where string attaches)
-4. **Pulley**:
-   - Attach small pulley/wheel to motor shaft
-   - Measure and record the radius (center to edge): **This is critical for accuracy!**
-   - Example: 10mm radius
+   - Cut wood block: 40mm × 40mm × 60mm
+   - Drill hole for motor body
+   - Motor sits **vertically** with shaft pointing UP
+   - Secure to base with screws
 
-### 1.3 Attach String
+3. **Lever arm**:
+   - Aluminum strip: 80mm × 15mm × 2mm
+   - Drill center hole for motor shaft (shaft diameter + 0.1mm)
+   - Attach to motor shaft (press-fit or set screw)
+   - Must be rigid (not flexible!)
 
-1. Tie fishing line to pulley groove
-2. Run string horizontally to load cell's free end
-3. Tie securely to load cell hook
-4. String should be taut but not pulling when motor is off
+4. **Load cell mount**:
+   - Mount load cell **horizontally** below lever arm
+   - Fixed end: Screw to base plate
+   - Free end: Positioned under lever arm contact point
+   - Gap: 1-2mm when motor is off
 
-### 1.4 Measure Torque Arm Radius
+### 1.3 Assemble and Align
 
-Use calipers or ruler to measure from center of motor shaft to center of string contact point on pulley.
+1. **Mount motor** vertically in holder, shaft pointing up
+
+2. **Attach lever arm** to motor shaft
+   - Slide onto shaft or use shaft coupler
+   - Lever must rotate WITH shaft (no slipping!)
+   - Position horizontally when motor is off
+
+3. **Position load cell** horizontally below lever
+   - One end of lever arm should contact load cell free end
+   - Lever should be 1-2mm above load cell (not touching when motor off)
+   - When motor rotates, lever pushes down on load cell
+
+4. **Verify alignment**:
+   - Lever arm perpendicular to load cell
+   - No side loads (must push straight down)
+   - Lever rotates freely without binding
+
+### 1.4 Measure Lever Arm Length
+
+**CRITICAL for accurate torque readings!**
+
+Use calipers or precise ruler to measure from:
+- **Start:** Center of motor shaft
+- **End:** Center of load cell contact point
+
+```
+    Motor Shaft
+        ●
+        |<------ Measure this distance ------>|
+    ====●=======================================
+                                              ↓
+                                        Contact point
+                                              ↓
+                                         [Load Cell]
+```
+
+**Example:** 60.0 mm
 
 **Record this value** - you'll need it for ESP32 code!
 
-Example: `10.0 mm`
+```cpp
+#define TORQUE_ARM_RADIUS_MM  60.0  // YOUR measured value
+```
+
+**Tips:**
+- Measure from shaft CENTER (not edge)
+- Measure to contact point on lever (where it touches load cell)
+- Use millimeters for precision
+- Double-check measurement (±1mm = ±1.7% error)
 
 ---
 
@@ -207,11 +279,14 @@ Go to `Sketch > Include Library > Manage Libraries` and install:
 
 ### 3.4 Update Configuration
 
-1. Open `esp32/torque_analyzer.ino`
-2. Update this line with your measured torque arm radius:
+1. Open `esp32/torque_analyzer.ino` (or `torque_analyzer_oled.ino` for OLED version)
+2. Update this line with your measured **lever arm length**:
    ```cpp
-   #define TORQUE_ARM_RADIUS_MM  10.0   // Your measured value in mm
+   #define TORQUE_ARM_RADIUS_MM  60.0   // Your measured value in mm
    ```
+   - This is the distance from motor shaft center to load cell contact point
+   - Measured in Step 1.4 of mechanical setup
+   - Example: 60mm, 70mm, 80mm depending on your lever arm
 3. Keep calibration factor as default for now (we'll calibrate later)
 
 ### 3.5 Upload to ESP32
