@@ -1,6 +1,6 @@
 # Wiring Diagram - OLED Display Version
 
-Complete wiring for standalone Mini 4WD Torque Analyzer with OLED display and button controls.
+Complete wiring for standalone DC Motor Stall Torque Analyzer with OLED display and button controls.
 
 ## System Overview
 

@@ -1,6 +1,6 @@
 # Project Structure
 
-Mini 4WD Torque Analyzer - Complete project organization and file guide.
+DC Motor Stall Torque Analyzer - Complete project organization and file guide.
 
 ## Current Version: OLED Standalone
 
@@ -12,7 +12,7 @@ Mini 4WD Torque Analyzer - Complete project organization and file guide.
 ## Directory Structure
 
 ```
-mini4wd-torque-analyzer/
+dc-motor-torque-analyzer/
 │
 ├── README.md                          # Main project README (OLED version)
 ├── PROJECT_STRUCTURE.md               # This file - project organization

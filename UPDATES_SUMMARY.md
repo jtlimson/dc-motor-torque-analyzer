@@ -1,6 +1,6 @@
 # Project Updates Summary
 
-This document summarizes the improvements made to the Mini 4WD Torque Analyzer design.
+This document summarizes the improvements made to the DC Motor Stall Torque Analyzer design.
 
 ## Major Design Changes
 
@@ -129,7 +129,6 @@ Four protection options provided:
 | Load Cell (100-200g) | Force measurement | $5-10 |
 | INA219 | Current/voltage sensor | $5-8 |
 | **XL4015 Module** | **Current limiter** | **$3-5** |
-| Raspberry Pi 5 | Web server | $60-80 |
 | Breadboard & wires | Connections | $5-10 |
 
 **Total: ~$88-130** (with protection)
@@ -182,7 +181,7 @@ Four protection options provided:
 
 ## Quick Reference
 
-### Typical Mini 4WD Motor Values
+### Typical Small DC Motor Values
 
 **Normal Operation (Free running):**
 | Motor Type | Voltage | Current | Torque | Power |
@@ -255,8 +254,8 @@ A: 100g or 200g for 60-80mm lever arm. Larger capacity = less sensitive. Smaller
 **Q: Can I use a different microcontroller?**
 A: ESP32 is recommended for built-in Bluetooth. You could use Arduino + Bluetooth module, but needs code changes.
 
-**Q: Do I need the Raspberry Pi?**
-A: Technically no - you can view data on ESP32 serial monitor. But Pi + web dashboard gives better visualization.
+**Q: How do I view the data?**
+A: The OLED version displays data directly on screen. For data logging, use Serial Monitor or add SD card module.
 
 ## Troubleshooting Quick Reference
 

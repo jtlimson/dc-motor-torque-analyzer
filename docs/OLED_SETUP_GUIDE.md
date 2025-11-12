@@ -1,6 +1,6 @@
 # OLED Display Version - Complete Setup Guide
 
-Standalone Mini 4WD Torque Analyzer with OLED display - no Raspberry Pi or smartphone needed!
+Standalone DC Motor Stall Torque Analyzer with OLED display
 
 ## Overview
 
@@ -19,15 +19,15 @@ This version displays all measurements directly on a 128x64 OLED screen with but
 - Peak torque
 - Peak power
 
-**✓ Control motor speed:**
-- Adjust PWM (0-100%)
+**✓ Control motor testing:**
+- Fixed voltage ON/OFF control
 - Set current limit
 - Real-time monitoring
 
 **✓ Three display modes:**
 1. **REALTIME** - Live measurements
 2. **MAX VALUES** - Peak values recorded
-3. **MOTOR CONTROL** - Adjust motor speed
+3. **TEST CONTROL** - Motor ON/OFF and current limit
 
 ## Parts List
 
@@ -221,11 +221,11 @@ Button RESET:
 7. INA219 GND → ESP32 GND [IMPORTANT!]
 ```
 
-### Step 7: Wire Motor PWM Control
+### Step 7: Wire Motor Control
 
 **For motor driver (BTS7960 or L298N):**
 ```
-ESP32 GPIO 27 → Motor Driver PWM/EN pin
+ESP32 GPIO 27 → Motor Enable/ON pin
 ESP32 GND → Motor Driver GND
 Motor Driver → Motor terminals
 ```
@@ -253,7 +253,7 @@ Motor (-) → Battery (-)
 
 ### Step 1: Open Firmware File
 
-1. Navigate to project folder: `mini4wd-torque-analyzer/esp32/`
+1. Navigate to project folder: `dc-motor-torque-analyzer/esp32/`
 2. Open `torque_analyzer_oled.ino` in Arduino IDE
 
 ### Step 2: Configure Settings
@@ -309,14 +309,14 @@ If OLED doesn't work, try changing:
 
 **Expected output:**
 ```
-Mini 4WD Torque Analyzer - OLED Version
+DC Motor Stall Torque Analyzer - OLED Version
 ========================================
 Initializing HX711...
 HX711 initialized and tared.
 Initializing INA219...
 INA219 initialized.
 Buttons initialized.
-PWM initialized.
+Motor control initialized.
 Setup complete!
 ```
 
@@ -602,7 +602,7 @@ UP/DN: Adjust PWM
 
 ## Expected Values
 
-### Typical Mini 4WD Motors (2.4-3V)
+### Typical Small DC Motors (Fixed Voltage)
 
 **Free Running (No Load):**
 | Motor | Current | Torque | Power |
@@ -696,8 +696,8 @@ I:0.47A T:61.2mN.m T:0.62kg.cm P:1.29W V:2.75V PWM:75%
 2. Temperature sensor (on motor)
 3. Data logging to SD card
 4. Efficiency calculations (mechanical vs electrical power)
-5. Bluetooth for phone app
-6. Add Raspberry Pi for web dashboard (original design)
+5. Data logging via Serial Monitor
+6. Custom measurement ranges
 
 ## Maintenance
 
@@ -726,20 +726,20 @@ You now have a standalone torque analyzer!
 - ✓ Real-time torque measurement
 - ✓ Current and power monitoring
 - ✓ Maximum value tracking
-- ✓ Motor speed control
+- ✓ Fixed voltage motor control
 - ✓ Safety current limiting
 - ✓ Portable, no computer needed
 
 **Next steps:**
-1. Test your Mini 4WD motors
-2. Compare different motors
+1. Test your DC motors
+2. Compare different motor types
 3. Optimize your setup
 4. Share your results!
 
 **Optional upgrades:**
-- Add Raspberry Pi for web dashboard
 - Design custom PCB
 - 3D print enclosure
+- Add data logging to SD card
 - Add more sensors
 
 ---

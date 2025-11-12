@@ -1,17 +1,20 @@
 /*
- * Mini 4WD Torque Analyzer - OLED Display Version
+ * DC Motor Stall Torque Analyzer - OLED Display Version
  *
  * Reads load cell (via HX711) and current/voltage (via INA219)
- * Computes torque (mN.m and kg.cm) and power (Watts)
+ * Computes stall torque (mN.m and kg.cm) and electrical power (V×I)
  * Displays on SSD1306 OLED screen
- * Controls motor via PWM with adjustable voltage/current
+ * Controls motor with fixed voltage ON/OFF + current limiting
  *
  * Display shows:
- * - Real-time: Current (A), Torque (mN.m, kg.cm), Power (W)
- * - Maximum values recorded
- * - Motor control: Voltage %, Current limit
+ * - Real-time: Current (A), Stall Torque (mN.m, kg.cm), Power (W)
+ * - Maximum stall values recorded
+ * - Test control: Fixed voltage ON/OFF, Current limit
  *
- * Author: Generated for Mini 4WD Project
+ * Note: PWM removed - uses simple ON/OFF with voltage regulation
+ * Power calculated as P = V × I (electrical power, sufficient for stall analysis)
+ *
+ * Author: Generated for DC Motor Testing
  * License: MIT
  */
 
@@ -32,11 +35,10 @@
 #define BTN_MODE_PIN    25    // Mode/Select button
 #define BTN_RESET_PIN   26    // Reset max values button
 
-// Motor PWM control
-#define MOTOR_PWM_PIN   27    // PWM output to motor driver
-#define PWM_FREQ        1000  // 1kHz
-#define PWM_CHANNEL     0
-#define PWM_RESOLUTION  8     // 0-255
+// Motor ON/OFF control (no PWM needed)
+#define MOTOR_ENABLE_PIN  27    // Digital output to enable motor
+// Note: Voltage controlled by external regulator
+// Current limited by XL4015 or similar current limiter
 
 // ==================== OLED CONFIGURATION ====================
 #define SCREEN_WIDTH    128
@@ -101,7 +103,7 @@ bool btnResetPressed = false;
 // ==================== SETUP ====================
 void setup() {
   Serial.begin(115200);
-  Serial.println("Mini 4WD Torque Analyzer - OLED Version");
+  Serial.println("DC Motor Stall Torque Analyzer - OLED Version");
   Serial.println("========================================");
 
   // Initialize I2C
@@ -117,7 +119,7 @@ void setup() {
   display.setTextSize(1);
   display.setTextColor(SSD1306_WHITE);
   display.setCursor(0, 0);
-  display.println(F("Mini 4WD Torque"));
+  display.println(F("DC Motor Torque"));
   display.println(F("Analyzer v2.0"));
   display.println(F(""));
   display.println(F("Initializing..."));
@@ -142,7 +144,7 @@ void setup() {
     display.display();
     while (1) { delay(10); }
   }
-  ina219.setCalibration_32V_2A();  // For standard Mini 4WD motors
+  ina219.setCalibration_32V_2A();  // For small DC motors
   Serial.println("INA219 initialized.");
 
   // Initialize buttons

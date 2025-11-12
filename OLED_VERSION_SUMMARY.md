@@ -1,6 +1,6 @@
 # OLED Version - What's New
 
-Complete standalone Mini 4WD Torque Analyzer with OLED display - no Raspberry Pi or phone required!
+Complete standalone DC Motor Stall Torque Analyzer with OLED display!
 
 ## What Changed
 
@@ -153,7 +153,7 @@ void updateMotorControl()
 
 ### Documentation
 
-**`OLED_VERSION_README.md`**
+**`README.md`**
 - Main overview for OLED version
 - Quick start guide
 - Feature comparison
@@ -512,7 +512,7 @@ ESP32 + OLED + Buttons
 ### Scenario 3: Hobby Use
 
 **OLED version ideal:**
-- Casual Mini 4WD enthusiast
+- DC motor enthusiast
 - Compare motors before buying
 - Quick tuning adjustments
 - Learn motor characteristics
@@ -655,8 +655,8 @@ ESP32 + OLED + Buttons
 ## Resources
 
 **All documentation:**
-- `OLED_VERSION_README.md` - Quick overview
-- `docs/OLED_SETUP_GUIDE.md` - Complete guide
+- `README.md` - Project overview
+- `docs/OLED_SETUP_GUIDE.md` - Complete setup guide
 - `docs/WIRING_OLED.md` - Wiring diagrams
 - `docs/MOTOR_PROTECTION.md` - Current limiting
 - `docs/CALIBRATION.md` - Calibration
@@ -684,7 +684,7 @@ ESP32 + OLED + Buttons
 ✅ Portable operation
 
 **Perfect for:**
-- Mini 4WD enthusiasts
+- DC motor enthusiasts
 - Hobby builders
 - Motor testing
 - Educational projects

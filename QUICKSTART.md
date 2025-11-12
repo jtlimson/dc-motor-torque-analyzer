@@ -1,13 +1,15 @@
-# Quick Start Guide
+# Quick Start Guide - OLED Version
 
-Get your Mini 4WD Torque Analyzer running in 30 minutes!
+Get your DC Motor Stall Torque Analyzer running in 30 minutes!
 
 ## Prerequisites
 
 - ESP32 board
 - HX711 + Load Cell
 - INA219 current sensor
-- Raspberry Pi 5
+- OLED display (SSD1306 128x64)
+- 4 tactile buttons
+- XL4015 current limiter
 - Basic soldering skills
 
 ---
@@ -22,12 +24,26 @@ HX711 DT   → ESP32 GPIO 16
 HX711 SCK  → ESP32 GPIO 4
 ```
 
-### INA219 to ESP32
+### INA219 + OLED to ESP32 (I2C Bus)
 ```
 INA219 VCC → ESP32 3.3V
 INA219 GND → ESP32 GND
-INA219 SDA → ESP32 GPIO 21
-INA219 SCL → ESP32 GPIO 22
+INA219 SDA → ESP32 GPIO 21 (shared with OLED)
+INA219 SCL → ESP32 GPIO 22 (shared with OLED)
+
+OLED VCC   → ESP32 3.3V
+OLED GND   → ESP32 GND
+OLED SDA   → ESP32 GPIO 21 (shared with INA219)
+OLED SCL   → ESP32 GPIO 22 (shared with INA219)
+```
+
+### Buttons to ESP32
+```
+Button UP    → ESP32 GPIO 32
+Button DOWN  → ESP32 GPIO 33
+Button MODE  → ESP32 GPIO 25
+Button RESET → ESP32 GPIO 26
+(All buttons connect other pin to GND)
 ```
 
 ### Load Cell to HX711
@@ -46,7 +62,7 @@ Motor (-)   → Battery (-)
 INA219 GND  → ESP32 GND (IMPORTANT!)
 ```
 
-**See `docs/WIRING.md` for detailed diagrams**
+**See `docs/WIRING_OLED.md` for detailed diagrams**
 
 ---
 
@@ -54,14 +70,14 @@ INA219 GND  → ESP32 GND (IMPORTANT!)
 
 1. Install Arduino IDE
 2. Install ESP32 board support
-3. Install libraries: `HX711`, `Adafruit INA219`
-4. Open `esp32/torque_analyzer.ino`
+3. Install libraries: `HX711`, `Adafruit INA219`, `Adafruit GFX`, `Adafruit SSD1306`
+4. Open `esp32/torque_analyzer_oled.ino`
 5. Update torque arm radius:
    ```cpp
    #define TORQUE_ARM_RADIUS_MM  10.0  // YOUR VALUE
    ```
 6. Upload to ESP32
-7. Check Serial Monitor - should see "BLE Advertising started"
+7. Check OLED display - should show "REALTIME" mode
 
 ---
 
@@ -85,56 +101,45 @@ INA219 GND  → ESP32 GND (IMPORTANT!)
 
 ---
 
-## Step 4: Setup Raspberry Pi (5 min)
+## Step 4: Setup Current Limiter (5 min)
 
-```bash
-# Clone or copy project files
-cd ~
-mkdir mini4wd-torque-analyzer
-cd mini4wd-torque-analyzer
+1. Connect XL4015 between battery and motor
+2. Adjust output voltage to match battery voltage
+3. Short circuit output with ammeter
+4. Adjust CC potentiometer until 2.5A current limit
+5. Remove short circuit
 
-# Install dependencies
-sudo apt install -y python3-pip bluetooth bluez
-pip3 install flask flask-socketio bleak
-
-# Copy Python files
-# (web_server.py, templates/index.html, requirements.txt)
-
-# Run server
-python3 raspberry-pi/web_server.py
-```
-
-**Look for output:**
-```
-Server starting on http://192.168.1.XXX:5000
-```
+**See `docs/MOTOR_PROTECTION.md` for detailed setup**
 
 ---
 
-## Step 5: View Dashboard (2 min)
+## Step 5: Test Display Modes (2 min)
 
-1. Note the IP address from Pi output
-2. Open phone browser
-3. Go to: `http://[PI-IP]:5000`
-4. See real-time torque and power data!
+1. Press MODE button to cycle through:
+   - **REALTIME** - Live measurements
+   - **MAX VALUES** - Peak values recorded
+   - **MOTOR CONTROL** - Adjust motor PWM
+2. Use UP/DOWN buttons in Motor Control mode
+3. Use RESET button to clear maximum values
 
 ---
 
 ## Testing
 
 1. **No load**: Should show ~0 torque, ~0 current
-2. **Pull string**: Force/torque should increase
-3. **Run motor**: Should show torque + power readings
+2. **Apply force to lever**: Force/torque should increase
+3. **Test control mode**: Set current limit, turn motor ON
+4. **Stall test**: Block motor shaft for 3 seconds max
 
 ---
 
-## Expected Values (Mini 4WD Motors @ 2.4-3V)
+## Expected Stall Values (Small DC Motors @ Fixed Voltage)
 
-| Motor Type | Torque | Current | Power |
+| Motor Type | Stall Torque | Stall Current | Stall Power |
 |------------|--------|---------|-------|
-| Standard | 0.5-1.0 mN·m | 200-400 mA | 0.5-1.2 W |
-| High-Speed | 0.3-0.7 mN·m | 150-300 mA | 0.4-0.9 W |
-| Torque-Tuned | 1.0-2.0 mN·m | 300-500 mA | 0.7-1.5 W |
+| Small DC (6V) | 5-8 mN·m | 2.0-2.5 A | 3-4 W |
+| Gear Motor | 8-15 mN·m | 1.5-2.0 A | 2-3 W |
+| High Torque | 10-20 mN·m | 2.5-3.0 A | 4-5 W |
 
 ---
 
@@ -144,6 +149,15 @@ Server starting on http://192.168.1.XXX:5000
 - Install CH340 USB driver
 - Hold BOOT button while uploading
 
+**OLED display blank?**
+- Check I2C wiring (GPIO 21, 22)
+- Verify OLED address (usually 0x3C)
+- Check 3.3V power to OLED
+
+**Buttons not working?**
+- Check buttons wired to GND (not VCC)
+- Verify GPIO pin assignments
+
 **Load cell reading 0?**
 - Check wiring: Red→E+, Black→E-, White→A-, Green→A+
 - Verify 3.3V on HX711
@@ -151,10 +165,6 @@ Server starting on http://192.168.1.XXX:5000
 **INA219 not detected?**
 - Verify I2C wiring (GPIO 21, 22)
 - Check common ground connection
-
-**Bluetooth not connecting?**
-- Power cycle ESP32
-- Check Pi Bluetooth: `sudo systemctl status bluetooth`
 
 **Torque values incorrect?**
 - Re-calibrate load cell
@@ -165,9 +175,10 @@ Server starting on http://192.168.1.XXX:5000
 ## Full Documentation
 
 - **`README.md`** - Project overview
-- **`docs/BUILD_GUIDE.md`** - Complete step-by-step build
-- **`docs/WIRING.md`** - Detailed wiring diagrams
-- **`docs/CALIBRATION.md`** - Advanced calibration
+- **`docs/OLED_SETUP_GUIDE.md`** - Complete OLED version setup
+- **`docs/WIRING_OLED.md`** - OLED version wiring diagrams
+- **`docs/CALIBRATION.md`** - Load cell calibration
+- **`docs/MOTOR_PROTECTION.md`** - Current limiting setup
 
 ---
 
